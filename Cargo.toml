@@ -3,7 +3,7 @@ name = "cucko"
 version = "0.1.0"
 authors = [
     "Dan Sebastian Thrane <dthrane@gmail.com>",
-    "Brian Alberg",
+    "Brian Alberg <ba@xirov.com>",
     "Anders Busch <andersbusch@gmail.com>"
 ]
 
