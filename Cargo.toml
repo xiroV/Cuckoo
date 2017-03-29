@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = [
     "Dan Sebastian Thrane <dthrane@gmail.com>",
     "Brian Alberg",
-    "Anders Busch"
+    "Anders Busch <andersbusch@gmail.com>"
 ]
 
 [dependencies]
