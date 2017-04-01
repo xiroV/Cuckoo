@@ -1,5 +1,5 @@
 [package]
-name = "cucko"
+name = "cuckoo"
 version = "0.1.0"
 authors = [
     "Dan Sebastian Thrane <dthrane@gmail.com>",
