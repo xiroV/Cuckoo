@@ -32,7 +32,7 @@ fn main() {
         // TODO Fetch mails
         
         // Following print statements just to get some visuals
-        println!("name: {:?}", account_info["name"].unwrap());
+        println!("name: {:?}", account_info["name"]);
         println!("mail: {:?}", account_info["mail"]);
         println!("imap_server: {:?}", account_info["imap_server"]);
         println!("imap_user: {:?}", account_info["imap_user"]);
