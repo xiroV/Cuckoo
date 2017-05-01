@@ -20,12 +20,21 @@ fn main() {
 
     println!("Reading config file: {}", conf_file.display());
     
-    // Set config default values
-    conf.set_default("name", "John Doe");
-    conf.set_default("maildir", "");
-    
     // Get values from config file
     conf.merge(config::File::new(conf_file.to_str().unwrap(), config::FileFormat::Toml)).unwrap();
 
-    // println!("{:?}", conf.get("name"));
+    // Loop through accounts
+    for (account, values) in conf.get("accounts").unwrap().into_table().unwrap() { 
+        println!("\nFetching mail for account {:?}", account);
+
+        let account_info = values.into_table().unwrap();
+
+        // TODO Fetch mails
+        
+        // Following print statements just to get some visuals
+        println!("name: {:?}", account_info["name"].unwrap());
+        println!("mail: {:?}", account_info["mail"]);
+        println!("imap_server: {:?}", account_info["imap_server"]);
+        println!("imap_user: {:?}", account_info["imap_user"]);
+    }
 }
