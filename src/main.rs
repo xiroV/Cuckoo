@@ -6,7 +6,10 @@ fn main() {
 
     // Read config file
     let mut conf = config::Config::new();
-    conf.read();
+    match conf.read() {
+        None => { },
+        Some(err) => println!("Error: {}", err),
+    }
         
     // Print stuff from the config file (Just for visuals)
     for acc in conf.accounts {

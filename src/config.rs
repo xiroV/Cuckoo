@@ -16,7 +16,7 @@ pub struct Config {
 
 pub trait ConfigReader {
     fn new() -> Self;
-    fn read(&mut self);
+    fn read(&mut self) -> Option<&str>;
 }
 
 
@@ -26,7 +26,7 @@ impl ConfigReader for Config {
         return conf;
     }
 
-    fn read(&mut self) {
+    fn read(&mut self) -> Option<&str> {
         let mut conf_file = path::PathBuf::new();
         let mut conf = conf::Config::new();                   // config-rs
 
@@ -44,7 +44,12 @@ impl ConfigReader for Config {
         println!("Reading config file: {:?}", conf_file);
         
         // Get values from config file
-        conf.merge(conf::File::new(conf_file.to_str().unwrap(), conf::FileFormat::Toml)).unwrap();
+        match conf.merge(conf::File::new(conf_file.to_str().unwrap(), conf::FileFormat::Toml)) {
+            Ok(_) => { },
+            Err(_) => { return Some("Config file not found"); },
+        }
+
+        //conf.merge(conf::File::new(conf_file.to_str().unwrap(), conf::FileFormat::Toml)).unwrap();
 
         // Loop through accounts
         for (account, values) in conf.get("accounts").unwrap().into_table().unwrap() { 
@@ -62,5 +67,6 @@ impl ConfigReader for Config {
             // Push to the config structure
             self.accounts.push(account);
         }
+        return None; 
     }
 }
