@@ -1,3 +1,6 @@
+/* Implementation of ConfigReader using the config-rs crate
+ */
+
 use config::{Account, Config, ConfigReader};
 use std::env;
 use std::path;

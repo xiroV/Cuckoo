@@ -1,6 +1,13 @@
+/* The Config Interface
+ *
+ * To implement a new config parser the parser should implement the
+ * ConfigReader for the Config structure, and to use the new interface
+ * the `mod ...` line in this file should be changed to the name of
+ * the new config parser module.
+ */
+
 mod configrs;
 
-#[derive(Default)]
 pub struct Account {
     pub id: String,
     pub name: Option<String>,
