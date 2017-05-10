@@ -14,9 +14,21 @@ fn main() {
     // Print stuff from the config file (Just for visuals)
     for acc in conf.accounts {
         println!("\nAccount: {}", acc.id);
-        println!("Name: {}", acc.name);
-        println!("Address: {}", acc.mail);
-        println!("IMAP server: {}", acc.imap_server);
-        println!("IMAP user: {}", acc.imap_user);
+        println!("Name: {}", match acc.name {
+            Some(name) => name,
+            None => String::new() 
+        });
+        println!("Address: {}", match acc.mail {
+            Some(mail) => mail,
+            None => String::new()
+        });
+        println!("IMAP server: {}", match acc.imap_server {
+            Some(imap_server) => imap_server,
+            None => String::new()
+        });
+        println!("IMAP user: {}", match acc.imap_user {
+            Some(imap_user) => imap_user,
+            None => String::new()
+        });
     }
 }
