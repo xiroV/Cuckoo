@@ -13,7 +13,7 @@ fn main() {
         
     // Print stuff from the config file (Just for visuals)
     for acc in conf.accounts {
-        println!("\nAccount: {}", acc.acc);
+        println!("\nAccount: {}", acc.id);
         println!("Name: {}", acc.name);
         println!("Address: {}", acc.mail);
         println!("IMAP server: {}", acc.imap_server);

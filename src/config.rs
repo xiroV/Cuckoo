@@ -3,7 +3,7 @@ use std::path;
 extern crate config as conf;
 
 pub struct Account {
-    pub acc: String,
+    pub id: String,
     pub name: String,
     pub mail: String,
     pub imap_server: String,
@@ -52,12 +52,12 @@ impl ConfigReader for Config {
         //conf.merge(conf::File::new(conf_file.to_str().unwrap(), conf::FileFormat::Toml)).unwrap();
 
         // Loop through accounts
-        for (account, values) in conf.get("accounts").unwrap().into_table().unwrap() { 
+        for (account_id, values) in conf.get("accounts").unwrap().into_table().unwrap() { 
             let mut account_info = values.into_table().unwrap();
 
             // Generate the account structure 
             let account = Account {
-                acc: account,
+                id: account_id,
                 name: account_info.remove("name").unwrap().into_str().unwrap(),
                 mail: account_info.remove("mail").unwrap().into_str().unwrap(),
                 imap_server: account_info.remove("imap_server").unwrap().into_str().unwrap(),
