@@ -19,8 +19,7 @@ impl ConfigReader for Config {
         match env::home_dir() {
             Some(path) => { conf_path = path; },
             None => { 
-                println!("Unable to find home directory. Config file not found."); 
-                return None;
+                return Some("Unable to find home directory. Config file not found.");
             }
         }
 
