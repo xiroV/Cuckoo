@@ -3,7 +3,7 @@
 
 use config::{Account, Config, ConfigReader};
 use std::env;
-use std::path;
+//use std::path;
 extern crate config as conf;
 
 impl ConfigReader for Config {
@@ -13,13 +13,15 @@ impl ConfigReader for Config {
     }
 
     fn read(&mut self) -> Option<&str> {
-        let mut conf_path = path::PathBuf::new();
+        let mut conf_path;
         let mut conf = conf::Config::new();                   // config-rs
 
-        // Find home directory
-        match env::home_dir() { 
+        match env::home_dir() {
             Some(path) => { conf_path = path; },
-            None => println!("Unable to find home directory. Config file not found")
+            None => { 
+                println!("Unable to find home directory. Config file not found."); 
+                return None;
+            }
         }
 
         // Construct path to config file
