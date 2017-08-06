@@ -1,13 +1,12 @@
 use frontend::simple_cli::{SimpleCli, messages, control};
+use config::{ConfigReader, Config};
 use frontend::Runnerable;
 use std::io;
 
 impl Runnerable for SimpleCli {
 
 	fn new() -> Self {
-		let new_cli = SimpleCli { 
-			cli_id: 0
-		};
+		let new_cli = SimpleCli {};
 		return new_cli;
 	}
 	
@@ -27,14 +26,20 @@ impl Runnerable for SimpleCli {
 				_ => {}
 			};
 
-			assert_eq!(buffer.pop(), Some('\n'), "Error broken line");
-			
-			let splitted: Vec<String> = buffer.split(' ').map(|s| s.to_string()).collect();
+			match buffer.pop() {
+				None => {
+					messages::replyln(messages::BROKEN_LINE);	
+				},
+				_ => {}
+			};
 			
 			if buffer == "quit" || buffer == "QUIT" {
 				messages::replyln(messages::GOODBYE);
 				break;
 			}
+
+			let splitted: Vec<String> = buffer.split(' ').map(|s| s.to_string()).collect();
+			
 			if splitted.len() > 0 {
 				control::send_control(&splitted);
 			}

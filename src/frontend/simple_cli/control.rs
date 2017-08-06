@@ -1,4 +1,5 @@
-use frontend::simple_cli::messages;
+use frontend::simple_cli::{messages, model};
+use config::{ConfigReader, Config};
 
 // dispatches the functions according to the first inputted argument
 pub fn send_control(tokens: &[String]) {
@@ -15,11 +16,46 @@ fn handle_config(arguments: &[String]) {
 		messages::replyln(messages::CONFIG_NO_ARGS);
 	} else {
 		match arguments[0].as_str() {
-			"read" => messages::replyln("Reading config file..."), // put in your function handling here
+			"read" => read_config(&arguments[1..]), //messages::replyln("Reading config file..."), // put in your function handling here
 			"edit" => messages::replyln("Preparing to edit file..."),
 			_ => messages::replyln("buuh")
 		}
 	}
+}
+
+fn read_config(arguments: &[String]) {
+
+	if arguments.len() == 0 || arguments[0].to_lowercase() == "all" {
+ 		// read everything?
+	} else if arguments[0].to_lowercase() == "accounts" {
+		let mut conf = Config::new();
+	    match conf.read() {
+	        None => { },
+	        Some(err) => println!("Error: {}", err),
+	    }
+	        
+	    // Print stuff from the config file (Just for visuals)
+	    for acc in conf.accounts {
+	        messages::replyln(&format!("Account: {}", acc.id));
+	        println!("   Name: {}", match acc.name {
+	            Some(name) => name,
+	            None => String::new() 
+	        });
+	        println!("   Address: {}", match acc.mail {
+	            Some(mail) => mail,
+	            None => String::new()
+	        });
+	        println!("   IMAP server: {}", match acc.imap_server {
+	            Some(imap_server) => imap_server,
+	            None => String::new()
+	        });
+	        println!("   IMAP user: {}", match acc.imap_user {
+	            Some(imap_user) => imap_user,
+	            None => String::new()
+	        });
+	    }	
+	}
+	
 }
 
 // show help. Addition argument for specifying what topic 

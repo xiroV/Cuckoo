@@ -1,7 +1,6 @@
 mod simple_cli;
 mod control;
 mod messages;
+mod model;
 
-pub struct SimpleCli {
-	cli_id: i64
-}
+pub struct SimpleCli {}

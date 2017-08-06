@@ -9,6 +9,8 @@ pub const WELCOME2: &str = "Type 'quit' or 'QUIT' to exit, 'help' or 'HELP' to g
 pub const GOODBYE: &str = "Bye.";
 pub const UNKNOWN_COMMAND: &str = "? Try 'help'.";
 
+pub const BROKEN_LINE: &str = "Warning broken line";
+
 pub const HELP_MSG: &str = "Valid commands are: \
 	\n   quit - quit this session \
 	\n   config [read|edit] - create or read configuration files";
