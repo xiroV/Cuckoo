@@ -15,6 +15,10 @@ pub const HELP_MSG: &str = "Valid commands are: \
 	\n   quit - quit this session \
 	\n   config [read|edit] - create or read configuration files";
 
+pub const HELP_CONFIG: &str = "config: Read or edit the client configuration file";
+
 pub const CONFIG_NO_ARGS: &str = "Missing arguments. Valid arguments are:\
 	\n   read - reads the currently loaded configuration file\
 	\n   edit - make changes to the currently loaded configuration file or create a new one if no file exists";
+
+

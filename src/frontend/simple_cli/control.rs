@@ -63,5 +63,12 @@ fn read_config(arguments: &[String]) {
 fn handle_help(arguments: &[String]) {
 	if arguments.len() == 0 {
 		messages::replyln(messages::HELP_MSG);	
+	} else {
+		match arguments[0].as_str() {
+			"config" | "configuration" => {
+				messages::replyln(messages::HELP_CONFIG);
+			},
+			x => messages::replyln(&format!("No help for topic {:?}", x)),
+		}
 	}
 }

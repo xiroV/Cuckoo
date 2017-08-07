@@ -39,8 +39,8 @@ impl Runnerable for SimpleCli {
 			}
 
 			let splitted: Vec<String> = buffer.split(' ').map(|s| s.to_string()).collect();
-			
-			if splitted.len() > 0 {
+
+			if splitted.len() > 0 && splitted[0].len() > 0 {
 				control::send_control(&splitted);
 			}
 		}
