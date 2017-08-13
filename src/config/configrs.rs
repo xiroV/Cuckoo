@@ -28,7 +28,7 @@ impl ConfigReader for Config {
         conf_path.push("cuckoo");
         conf_path.push("config.toml");
 
-        println!("Reading config file: {:?}", conf_path);
+        //println!("Reading config file: {:?}", conf_path);
 
         let conf_file = conf::File::new(conf_path.to_str().unwrap(), conf::FileFormat::Toml); 
 

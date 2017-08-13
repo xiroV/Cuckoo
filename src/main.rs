@@ -1,10 +1,17 @@
 mod config;
-use config::ConfigReader;
+mod frontend;
+use frontend::Runnerable;
+use frontend::simple_cli::SimpleCli;
+//use config::ConfigReader;
 
 fn main() {
-    println!("Starting Cuckoo...");
+    let cli = SimpleCli::new();
+
+    cli.main_loop();
+    //println!("Starting Cuckoo...");
 
     // Read config file
+    /*
     let mut conf = config::Config::new();
     match conf.read() {
         None => { },
@@ -31,4 +38,6 @@ fn main() {
             None => String::new()
         });
     }
+    */
+
 }
