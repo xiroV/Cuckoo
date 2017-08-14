@@ -17,13 +17,14 @@ impl Runnerable for SimpleCli {
 		messages::replyln(messages::WELCOME2);
 		loop {
 			let mut buffer = String::new();
-			
+			print!("{}", messages::PROMPT);
+			io::Write::flush(&mut io::stdout()).expect("Error flush failure");
 			match stdin.read_line(&mut buffer) {
 				Err(error) => {
 					// FIXME find out how variadic arguments works 
 					messages::replyln(&format!("Error: {}", error));
 				},
-				_ => {}
+				Ok(x) => {}
 			};
 
 			match buffer.pop() {
