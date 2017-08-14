@@ -9,3 +9,5 @@ authors = [
 
 [dependencies]
 config = "0.4.1"
+atarashii_imap = "0.3.0"
+openssl = "0.9.16"

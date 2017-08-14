@@ -1,10 +1,12 @@
 use frontend::simple_cli::{messages, model};
 use config::{ConfigReader, Config};
+use imap::{IMAPClient, IMAP};
 
 // dispatches the functions according to the first inputted argument
 pub fn send_control(tokens: &[String]) {
 	match tokens[0].to_lowercase().as_str() {
 		"config" => handle_config(&tokens[1..]),
+		"mail" => handle_mail(&tokens[1..]),
 		"help" => handle_help(&tokens[1..]),
 		_ => messages::replyln(messages::UNKNOWN_COMMAND)
 	}
@@ -71,4 +73,9 @@ fn handle_help(arguments: &[String]) {
 			x => messages::replyln(&format!("No help for topic {:?}", x)),
 		}
 	}
+}
+
+// Handle IMAP
+fn handle_mail(arguments: &[String]) {
+    let imap = IMAP::connect();     
 }
