@@ -77,5 +77,12 @@ fn handle_help(arguments: &[String]) {
 
 // Handle IMAP
 fn handle_mail(arguments: &[String]) {
-    let imap = IMAP::connect();     
+    if arguments.len() == 3 {
+        match IMAP::connect(&arguments[0], &arguments[1], &arguments[2]) {
+            Ok(s) => messages::replyln("Connection established"),
+            Err(e) => messages::replyln(&format!("Error: {:?}", e))
+        }
+    } else {
+        messages::replyln("Not enough arguments");
+    }
 }
