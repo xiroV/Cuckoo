@@ -21,4 +21,6 @@ pub const CONFIG_NO_ARGS: &str = "Missing arguments. Valid arguments are:\
 	\n   read - reads the currently loaded configuration file\
 	\n   edit - make changes to the currently loaded configuration file or create a new one if no file exists";
 
-
+pub const IMAP_CONNECTION_SUCCESS: &str = "Connection established";
+pub const IMAP_CONNECTION_FAILED: &str = "Failed to connect to the given mail server";
+pub const IMAP_LOGIN_FAILED: &str = "Failed to login to mail server. Please check your credentials";

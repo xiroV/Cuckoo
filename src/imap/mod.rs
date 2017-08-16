@@ -3,19 +3,19 @@
  * New IMAP clients should implement the IMAPClient trait
  */
 
-extern crate atarashii_imap;
-
 // Currently used IMAP client
-pub mod atarashii;
+pub mod rust_imap;
 
 use config::{Account};
-use self::atarashii_imap::{Connection};
 use std::io;
 
 pub trait IMAPClient {
-    fn connect(&String, &String, &String) -> io::Result<()>;
+    fn connect(&String, &String, &String) -> Result<(), IMAPError>;
 }
 
-pub struct IMAP {
-    connection: Connection,
+pub struct IMAP {}
+
+pub enum IMAPError {
+    Connection,
+    Login
 }

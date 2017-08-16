@@ -3,7 +3,7 @@ extern crate openssl;
 
 use self::atarashii_imap::{Connection, Response};
 use imap::{IMAPClient, IMAP};
-use self::openssl::ssl::{SslContext, SslStream};
+use self::openssl::ssl::{SslContext, SslStream, SslMethod, SslConnectorBuilder};
 use std::io;
 
 impl IMAPClient for IMAP {

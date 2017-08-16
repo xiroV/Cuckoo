@@ -11,3 +11,4 @@ authors = [
 config = "0.4.1"
 atarashii_imap = "0.3.0"
 openssl = "0.9.16"
+imap = "0.3.3"

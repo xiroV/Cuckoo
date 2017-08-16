@@ -1,6 +1,6 @@
 use frontend::simple_cli::{messages, model};
 use config::{ConfigReader, Config};
-use imap::{IMAPClient, IMAP};
+use imap::{IMAPClient, IMAP, IMAPError};
 
 // dispatches the functions according to the first inputted argument
 pub fn send_control(tokens: &[String]) {
@@ -79,8 +79,11 @@ fn handle_help(arguments: &[String]) {
 fn handle_mail(arguments: &[String]) {
     if arguments.len() == 3 {
         match IMAP::connect(&arguments[0], &arguments[1], &arguments[2]) {
-            Ok(s) => messages::replyln("Connection established"),
-            Err(e) => messages::replyln(&format!("Error: {:?}", e))
+            Ok(_) => messages::replyln(messages::IMAP_CONNECTION_SUCCESS),
+            Err(e) => match e {
+                IMAPError::Connection => messages::replyln(messages::IMAP_CONNECTION_FAILED),
+                IMAPError::Login => messages::replyln(messages::IMAP_LOGIN_FAILED)
+            }
         }
     } else {
         messages::replyln("Not enough arguments");
