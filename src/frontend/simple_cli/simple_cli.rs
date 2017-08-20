@@ -6,11 +6,12 @@ use std::io;
 impl Runnerable for SimpleCli {
 
 	fn new() -> Self {
-		let new_cli = SimpleCli {};
-		return new_cli;
+		SimpleCli {
+            imap_connection: None, 
+        }
 	}
 	
-	fn main_loop(self) {
+	fn main_loop(&mut self) {
 		let stdin = io::stdin();
 
 		messages::replyln(messages::WELCOME1);
@@ -41,7 +42,9 @@ impl Runnerable for SimpleCli {
 			let splitted: Vec<String> = buffer.split(' ').map(|s| s.to_string()).collect();
 
 			if splitted.len() > 0 && splitted[0].len() > 0 {
-				control::send_control(&splitted);
+                //let test_conn = None;
+                //self.imap_connection = test_conn;
+				control::send_control(self, &splitted);
 			}
 		}
 	}

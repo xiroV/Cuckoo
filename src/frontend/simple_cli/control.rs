@@ -1,12 +1,13 @@
-use frontend::simple_cli::{messages, model};
+use frontend::simple_cli::{messages, model, SimpleCli};
 use config::{ConfigReader, Config};
 use imap::{IMAPClient, IMAP, IMAPError};
 
 // dispatches the functions according to the first inputted argument
-pub fn send_control(tokens: &[String]) {
+pub fn send_control(client:&mut SimpleCli, tokens: &[String]) {
 	match tokens[0].to_lowercase().as_str() {
 		"config" => handle_config(&tokens[1..]),
-		"mail" => handle_mail(&tokens[1..]),
+		"connect" => handle_connect(client, &tokens[1..]),
+		//"mail" => handle_mail(&tokens[1..]),
 		"help" => handle_help(&tokens[1..]),
 		_ => messages::replyln(messages::UNKNOWN_COMMAND)
 	}
@@ -75,17 +76,37 @@ fn handle_help(arguments: &[String]) {
 	}
 }
 
-// Handle IMAP
-fn handle_mail(arguments: &[String]) {
+// Handle IMAP Connection
+fn handle_connect(client:&mut SimpleCli, arguments: &[String]) {
     if arguments.len() == 3 {
         match IMAP::connect(&arguments[0], &arguments[1], &arguments[2]) {
-            Ok(_) => messages::replyln(messages::IMAP_CONNECTION_SUCCESS),
+            Ok(conn) => {
+                client.imap_connection = Some(conn);
+                messages::replyln(messages::IMAP_CONNECTION_SUCCESS)
+            },
             Err(e) => match e {
                 IMAPError::Connection => messages::replyln(messages::IMAP_CONNECTION_FAILED),
                 IMAPError::Login => messages::replyln(messages::IMAP_LOGIN_FAILED)
             }
-        }
+        };
     } else {
         messages::replyln("Not enough arguments");
     }
 }
+
+// Handle mail related functionality
+/*fn handle_mail(arguments: &[String]) {
+    match connect(self, &arguments[0], &arguments[1], &arguments[2]) {
+        Ok(conn) => {
+            let imap_connection = conn;
+            messages::replyln(messages::IMAP_CONNECTION_SUCCESS)
+        },
+        Err(e) => match e {
+            IMAPError::Connection => messages::replyln(messages::IMAP_CONNECTION_FAILED),
+            IMAPError::Login => messages::replyln(messages::IMAP_LOGIN_FAILED)
+        }
+    }
+}*/
+
+
+

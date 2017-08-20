@@ -6,7 +6,7 @@ use frontend::simple_cli::SimpleCli;
 //use config::ConfigReader;
 
 fn main() {
-    let cli = SimpleCli::new();
+    let mut cli = SimpleCli::new();
 
     cli.main_loop();
     //println!("Starting Cuckoo...");

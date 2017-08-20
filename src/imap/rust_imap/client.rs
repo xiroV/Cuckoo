@@ -1,13 +1,15 @@
 extern crate imap;
 extern crate openssl;
 
-use self::imap::client::Client;
 use imap::{IMAP, IMAPClient, IMAPError};
-use self::openssl::ssl::{SslMethod, SslConnectorBuilder};
+use imap::rust_imap::Connection;
+use self::openssl::ssl::{SslMethod, SslConnectorBuilder, SslStream};
 use std::io;
+use std::net::TcpStream;
+use self::imap::client::Client;
 
-impl IMAPClient for IMAP {
-    fn connect(server:&String, username:&String, password:&String) -> Result<(), IMAPError> {
+impl IMAPClient for IMAP<Connection> {
+    fn connect(server:&String, username:&String, password:&String) -> Result<Self, IMAPError> {
         println!("Connecting..");
 
         let port = 993;
@@ -22,7 +24,12 @@ impl IMAPClient for IMAP {
 
         // Login to mail server
         match imap_socket.login(username, password) {
-            Ok(_) => return Ok(()),
+            Ok(_) => {
+                let imap = Self {
+                    connection: imap_socket,
+                };
+                return Ok(imap)
+            },
             Err(_) => return Err(IMAPError::Login)
         };
     }
