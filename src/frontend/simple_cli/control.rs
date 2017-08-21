@@ -5,7 +5,7 @@ use config::{ConfigReader, Config};
 pub fn send_control(tokens: &[String]) {
 	match tokens[0].to_lowercase().as_str() {
 		"config" => handle_config(&tokens[1..]),
-		"help" => handle_help(&tokens[1..]),
+		"help" | "?" => handle_help(&tokens[1..]),
 		_ => messages::replyln(messages::UNKNOWN_COMMAND)
 	}
 }
@@ -55,7 +55,6 @@ fn read_config(arguments: &[String]) {
 	        });
 	    }	
 	}
-	
 }
 
 // show help. Addition argument for specifying what topic 

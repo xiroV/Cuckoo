@@ -1,13 +1,14 @@
 
-// "server" reply is indented with ">> "
 pub fn replyln(st: &str) {
-	println!(">> {}", st);
+	println!("{}", st);
 }
+
+pub const PROMPT: &str = ">> "; 
 
 pub const WELCOME1: &str = "Welcome to the Cuckoo Mail Client Command Line Interpreter.";
 pub const WELCOME2: &str = "Type 'quit' or 'QUIT' to exit, 'help' or 'HELP' to get a list of commands.";
 pub const GOODBYE: &str = "Bye.";
-pub const UNKNOWN_COMMAND: &str = "? Try 'help'.";
+pub const UNKNOWN_COMMAND: &str = "Command not recognized. Try 'help' or '?'.";
 
 pub const BROKEN_LINE: &str = "Warning broken line";
 
