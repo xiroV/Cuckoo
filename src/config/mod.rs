@@ -23,4 +23,5 @@ pub struct Config {
 pub trait ConfigReader {
     fn new() -> Self;
     fn read(&mut self) -> Option<&str>;
+    fn get_account(self, search_id: &String) -> Option<Account>;
 }
