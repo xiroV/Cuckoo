@@ -1,6 +1,7 @@
 use frontend::simple_cli::{messages, model, SimpleCli};
 use config::{ConfigReader, Config};
 use imap::{IMAPClient, IMAP, IMAPError};
+use std::io;
 
 // dispatches the functions according to the first inputted argument
 pub fn send_control(client:&mut SimpleCli, tokens: &[String]) {
@@ -78,35 +79,62 @@ fn handle_help(arguments: &[String]) {
 
 // Handle IMAP Connection
 fn handle_connect(client:&mut SimpleCli, arguments: &[String]) {
-    if arguments.len() == 3 {
-        match IMAP::connect(&arguments[0], &arguments[1], &arguments[2]) {
-            Ok(conn) => {
-                client.imap_connection = Some(conn);
-                messages::replyln(messages::IMAP_CONNECTION_SUCCESS)
+    if arguments.len() == 1 {
+        // Fetch login information from the config file
+        let mut conf = Config::new();
+
+        match conf.read() {
+            None => { },
+            Some(err) => println!("{}", err)
+        }
+
+
+        // FIXME This is a mess
+        match conf.get_account(&arguments[0]) {
+            Some(acc) => {
+                match acc.imap_server {
+                    Some(imap_server) => {
+                        match acc.imap_user {
+                            Some(imap_user) => {
+                                let stdin = io::stdin();
+                                let mut password = String::new();
+
+                                println!("Password:");
+
+                                match stdin.read_line(&mut password) {
+                                    Err(err) => {
+                                        messages::replyln(&format!("Error: {}", err));
+                                    },
+                                    _ => {}
+                                };
+
+                                match IMAP::connect(&imap_server, &imap_user, &password) {
+                                    Ok(conn) => {
+                                        client.imap_connection = Some(conn);
+                                        messages::replyln(messages::IMAP_CONNECTION_SUCCESS)
+                                    },
+                                    Err(e) => match e {
+                                        IMAPError::Connection => messages::replyln(messages::IMAP_CONNECTION_FAILED),
+                                        IMAPError::Login => messages::replyln(messages::IMAP_LOGIN_FAILED)
+                                    }
+                                };
+                            },
+                            None => {
+                                messages::replyln(messages::ACCOUNT_IMAP_USER_NOT_FOUND);
+                            }
+                        };
+                    },
+                    None => {
+                        messages::replyln(messages::ACCOUNT_IMAP_SERVER_NOT_FOUND);
+                    }
+                };
             },
-            Err(e) => match e {
-                IMAPError::Connection => messages::replyln(messages::IMAP_CONNECTION_FAILED),
-                IMAPError::Login => messages::replyln(messages::IMAP_LOGIN_FAILED)
+            None => {
+                messages::replyln(messages::ACCOUNT_NOT_FOUND);
             }
         };
     } else {
         messages::replyln("Not enough arguments");
     }
 }
-
-// Handle mail related functionality
-/*fn handle_mail(arguments: &[String]) {
-    match connect(self, &arguments[0], &arguments[1], &arguments[2]) {
-        Ok(conn) => {
-            let imap_connection = conn;
-            messages::replyln(messages::IMAP_CONNECTION_SUCCESS)
-        },
-        Err(e) => match e {
-            IMAPError::Connection => messages::replyln(messages::IMAP_CONNECTION_FAILED),
-            IMAPError::Login => messages::replyln(messages::IMAP_LOGIN_FAILED)
-        }
-    }
-}*/
-
-
 

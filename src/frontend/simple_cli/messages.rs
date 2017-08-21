@@ -24,3 +24,11 @@ pub const CONFIG_NO_ARGS: &str = "Missing arguments. Valid arguments are:\
 pub const IMAP_CONNECTION_SUCCESS: &str = "Connection established";
 pub const IMAP_CONNECTION_FAILED: &str = "Failed to connect to the given mail server";
 pub const IMAP_LOGIN_FAILED: &str = "Failed to login to mail server. Please check your credentials";
+
+// TODO These could probably be functions taking the provided account id as a
+// parameter to provide more detailed error messages, e.g.
+// "The account with id `example` was not found in the config file"
+pub const ACCOUNT_NOT_FOUND: &str = "The account with the given id was not found";
+pub const ACCOUNT_IMAP_USER_NOT_FOUND: &str = "The imap_user parameter for the given account was not found";
+pub const ACCOUNT_IMAP_SERVER_NOT_FOUND: &str = "The imap_server parameter for the given account was not found";
+

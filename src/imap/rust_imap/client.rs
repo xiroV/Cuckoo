@@ -10,8 +10,6 @@ use self::imap::client::Client;
 
 impl IMAPClient for IMAP<Connection> {
     fn connect(server:&String, username:&String, password:&String) -> Result<Self, IMAPError> {
-        println!("Connecting..");
-
         let port = 993;
         let socket_addr = (server.as_str(), port);
         let ssl_connector = SslConnectorBuilder::new(SslMethod::tls()).unwrap().build();

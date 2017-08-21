@@ -42,8 +42,6 @@ impl Runnerable for SimpleCli {
 			let splitted: Vec<String> = buffer.split(' ').map(|s| s.to_string()).collect();
 
 			if splitted.len() > 0 && splitted[0].len() > 0 {
-                //let test_conn = None;
-                //self.imap_connection = test_conn;
 				control::send_control(self, &splitted);
 			}
 		}
