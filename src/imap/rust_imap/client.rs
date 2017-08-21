@@ -31,5 +31,47 @@ impl IMAPClient for IMAP<Connection> {
             Err(_) => return Err(IMAPError::Login)
         };
     }
+
+    // FIXME Should not print from here, but return list of capabilities
+    fn capability(&mut self) {
+        match self.connection.capability() {
+            Ok(capabilities) => {
+                for capability in capabilities.iter() {
+                    println!("{}", capability);
+                }
+            }
+            Err(e) => println!("Error parsing capability: {}", e),
+        };
+    }
+
+    /*fn fetch(&mut self, mailbox:&String) -> Result<Vec<&String>, String> {
+
+        let mut mail_list: Vec<&String> = Vec::new();
+
+        // Select inbox
+        match self.connection.select(mailbox) {
+            Ok(r) => {
+                println!("Result of Select: {}", r);
+
+                // Fetch all mail
+                match self.connection.fetch("*", "all") {
+                    Ok(lines) => {
+                        for line in lines.iter() {
+                            mail_list.push(&line);
+                        }
+
+                        return Ok(mail_list);
+                    },
+                    Err(e) => return Err(String::from("Error Fetching emails")),
+                };
+            },
+            Err(e) => return Err(String::from("Connection Error")),
+        };
+
+    }*/
+
+    fn disconnect(&mut self) {
+        self.connection.logout();
+    }
 }
 

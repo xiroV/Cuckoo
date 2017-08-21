@@ -6,6 +6,7 @@ pub fn replyln(st: &str) {
 
 pub const WELCOME1: &str = "Welcome to the Cuckoo Mail Client Command Line Interpreter.";
 pub const WELCOME2: &str = "Type 'quit' or 'QUIT' to exit, 'help' or 'HELP' to get a list of commands.";
+pub const DISCONNECTING: &str = "Disconnecting..";
 pub const GOODBYE: &str = "Bye.";
 pub const UNKNOWN_COMMAND: &str = "? Try 'help'.";
 
@@ -24,6 +25,8 @@ pub const CONFIG_NO_ARGS: &str = "Missing arguments. Valid arguments are:\
 pub const IMAP_CONNECTION_SUCCESS: &str = "Connection established";
 pub const IMAP_CONNECTION_FAILED: &str = "Failed to connect to the given mail server";
 pub const IMAP_LOGIN_FAILED: &str = "Failed to login to mail server. Please check your credentials";
+pub const IMAP_NO_CONNECTION: &str = "You are not connected to the mail server";
+pub const IMAP_NO_RESULT: &str = "No result";
 
 // TODO These could probably be functions taking the provided account id as a
 // parameter to provide more detailed error messages, e.g.

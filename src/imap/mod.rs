@@ -20,6 +20,9 @@ use config::{Account};
 
 pub trait IMAPClient {
     fn connect(&String, &String, &String) -> Result<IMAP<Connection>, IMAPError>;
+    fn capability(&mut self); // -> Result<Vec<String>>;
+    // fn fetch(&mut self, mailbox: &String) -> Result<Vec<&String>, String>;
+    fn disconnect(&mut self);
 }
 
 pub struct IMAP<T> {
@@ -28,5 +31,5 @@ pub struct IMAP<T> {
 
 pub enum IMAPError {
     Connection,
-    Login
+    Login,
 }

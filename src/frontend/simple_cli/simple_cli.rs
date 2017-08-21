@@ -2,6 +2,7 @@ use frontend::simple_cli::{SimpleCli, messages, control};
 use config::{ConfigReader, Config};
 use frontend::Runnerable;
 use std::io;
+use imap::IMAPClient;
 
 impl Runnerable for SimpleCli {
 
@@ -35,6 +36,14 @@ impl Runnerable for SimpleCli {
 			};
 			
 			if buffer == "quit" || buffer == "QUIT" {
+                match self.imap_connection {
+                    // Close the connection, if exists
+                    Some(ref mut conn) => {
+                        messages::replyln(messages::DISCONNECTING);
+                        conn.disconnect()
+                    }
+                    None => { }
+                }
 				messages::replyln(messages::GOODBYE);
 				break;
 			}

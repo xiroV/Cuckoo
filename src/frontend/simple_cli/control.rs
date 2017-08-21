@@ -8,7 +8,7 @@ pub fn send_control(client:&mut SimpleCli, tokens: &[String]) {
 	match tokens[0].to_lowercase().as_str() {
 		"config" => handle_config(&tokens[1..]),
 		"connect" => handle_connect(client, &tokens[1..]),
-		//"mail" => handle_mail(&tokens[1..]),
+		"mail" => handle_mail(client, &tokens[1..]),
 		"help" => handle_help(&tokens[1..]),
 		_ => messages::replyln(messages::UNKNOWN_COMMAND)
 	}
@@ -108,6 +108,8 @@ fn handle_connect(client:&mut SimpleCli, arguments: &[String]) {
                                     _ => {}
                                 };
 
+                                println!("Connecting..");
+
                                 match IMAP::connect(&imap_server, &imap_user, &password) {
                                     Ok(conn) => {
                                         client.imap_connection = Some(conn);
@@ -115,7 +117,7 @@ fn handle_connect(client:&mut SimpleCli, arguments: &[String]) {
                                     },
                                     Err(e) => match e {
                                         IMAPError::Connection => messages::replyln(messages::IMAP_CONNECTION_FAILED),
-                                        IMAPError::Login => messages::replyln(messages::IMAP_LOGIN_FAILED)
+                                        IMAPError::Login => messages::replyln(messages::IMAP_LOGIN_FAILED),
                                     }
                                 };
                             },
@@ -138,3 +140,22 @@ fn handle_connect(client:&mut SimpleCli, arguments: &[String]) {
     }
 }
 
+fn handle_mail(client: &mut SimpleCli, arguments: &[String]) {
+    println!("Not yet implemented");
+    /*match client.imap_connection {
+        Some(ref mut conn) => {
+            match conn.fetch(&arguments[0]) {
+                Ok(result) => {
+                    for line in result {
+                        println!("{}", line);
+                    }
+                },
+                Err(e) => messages::replyln(messages::IMAP_NO_RESULT),
+            };
+        },
+        None => {
+            messages::replyln(messages::IMAP_NO_CONNECTION);
+        }
+    };*/
+
+}
