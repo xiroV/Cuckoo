@@ -68,13 +68,4 @@ impl ConfigReader for Config {
         }
         return None; 
     }
-
-    fn get_account(self, search_id: &String) -> Option<Account> {
-        for acc in self.accounts {
-            if &acc.id == search_id {
-                return Some(acc);
-            }
-        }
-        return None;
-    }
 }

@@ -2,17 +2,15 @@ use frontend::simple_cli::{SimpleCli, messages, control};
 use config::{ConfigReader, Config};
 use frontend::Runnerable;
 use std::io;
-use imap::IMAPClient;
 
 impl Runnerable for SimpleCli {
 
 	fn new() -> Self {
-		SimpleCli {
-            imap_connection: None, 
-        }
+		let new_cli = SimpleCli {};
+		return new_cli;
 	}
 	
-	fn main_loop(&mut self) {
+	fn main_loop(self) {
 		let stdin = io::stdin();
 
 		messages::replyln(messages::WELCOME1);
@@ -37,14 +35,6 @@ impl Runnerable for SimpleCli {
 			};
 			
 			if buffer == "quit" || buffer == "QUIT" {
-                match self.imap_connection {
-                    // Close the connection, if exists
-                    Some(ref mut conn) => {
-                        messages::replyln(messages::DISCONNECTING);
-                        conn.disconnect()
-                    }
-                    None => { }
-                }
 				messages::replyln(messages::GOODBYE);
 				break;
 			}
@@ -52,7 +42,7 @@ impl Runnerable for SimpleCli {
 			let splitted: Vec<String> = buffer.split(' ').map(|s| s.to_string()).collect();
 
 			if splitted.len() > 0 && splitted[0].len() > 0 {
-				control::send_control(self, &splitted);
+				control::send_control(&splitted);
 			}
 		}
 	}
