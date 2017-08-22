@@ -1,26 +1,31 @@
-use imap::{IMAP, Connection, IMAPError}
-
 mod simple_controller;
+
+use imap::{IMAP, Connection};
 
 enum MessageType {
     message,
     error, 
 }
 
-struct Control {
-    imap_connection: Some(IMAP<Connection>),
-}
-
 struct ControlMessage {
-    msg_type: 
-    description: String;
+    message_type: MessageType,
+    description: String,
 }
 
-trait Controller {
+pub struct Control {
+    imap_connection: Option<IMAP<Connection>>,
+    message: Option<ControlMessage>,
+}
+
+pub trait Controller {
     fn new() -> Self;
-    fn imap_connect(&self, &String) -> Result<Self, ControlMessage>;
+    fn push_message(&mut self, ControlMessage) -> &Self;
+}
+
+pub trait IMAPController {
+    fn imap_connect(&mut self, &String, &String) -> Result<&Self, ControlMessage>;
 }
 
 trait MessageHandler {
-    fn new(&str) -> Self;
+    fn new(MessageType, &str) -> Self;
 }
