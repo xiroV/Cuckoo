@@ -18,7 +18,15 @@ pub struct IMAP<T> {
     connection: T
 }
 
-pub enum IMAPError {
+pub enum IMAPErrorType {
     Connection,
     Login,
+}
+
+pub struct IMAPError {
+    pub err_type: IMAPErrorType,
+}
+
+pub trait IMAPErrorHandler {
+    fn new(IMAPErrorType) -> Self;
 }
