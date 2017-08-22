@@ -1,7 +1,7 @@
 extern crate imap;
 extern crate openssl;
 
-use imap::{IMAP, IMAPClient, IMAPError};
+use imap::{IMAP, IMAPClient, IMAPError, IMAPErrorType, IMAPErrorHandler};
 use imap::rust_imap::Connection;
 use self::openssl::ssl::{SslMethod, SslConnectorBuilder, SslStream};
 use std::io;
@@ -17,7 +17,7 @@ impl IMAPClient for IMAP<Connection> {
         // Connect to mail server
         let mut imap_socket = match Client::secure_connect(socket_addr, server, ssl_connector) {
             Ok(s) => s,
-            Err(_) => return Err(IMAPError::Connection)   
+            Err(_) => return Err(IMAPError::new(IMAPErrorType::Connection))   
         };
 
         // Login to mail server
@@ -28,7 +28,7 @@ impl IMAPClient for IMAP<Connection> {
                 };
                 return Ok(imap)
             },
-            Err(_) => return Err(IMAPError::Login)
+            Err(_) => return Err(IMAPError::new(IMAPErrorType::Login))
         };
     }
 
