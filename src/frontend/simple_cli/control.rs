@@ -1,5 +1,5 @@
 use frontend::simple_cli::{messages, model};
-use config::{ConfigReader, Config};
+use config::{ConfigReader, Config, ConfigError, ConfigErrorType};
 
 // dispatches the functions according to the first inputted argument
 pub fn send_control(tokens: &[String]) {
@@ -27,32 +27,24 @@ fn read_config(arguments: &[String]) {
 
 	if arguments.len() == 0 || arguments[0].to_lowercase() == "all" {
  		// read everything?
+        println!("Not yet implemented");
 	} else if arguments[0].to_lowercase() == "accounts" {
-		let mut conf = Config::new();
+		let mut conf = Config::init();
 	    match conf.read() {
-	        None => { },
-	        Some(err) => println!("Error: {}", err),
+	        Ok(_) => { },
+	        Err(err) => match err.err_type {
+                ConfigErrorType::MissingField => println!("Missing a field for one of your accounts in the config file: {:?}", err.field),
+                ConfigErrorType::FileNotFound => println!("Your config file was not found"),
+            }
 	    }
 	        
 	    // Print stuff from the config file (Just for visuals)
 	    for acc in conf.accounts {
 	        messages::replyln(&format!("Account: {}", acc.id));
-	        println!("   Name: {}", match acc.name {
-	            Some(name) => name,
-	            None => String::new() 
-	        });
-	        println!("   Address: {}", match acc.mail {
-	            Some(mail) => mail,
-	            None => String::new()
-	        });
-	        println!("   IMAP server: {}", match acc.imap_server {
-	            Some(imap_server) => imap_server,
-	            None => String::new()
-	        });
-	        println!("   IMAP user: {}", match acc.imap_user {
-	            Some(imap_user) => imap_user,
-	            None => String::new()
-	        });
+	        println!("   Name: {}", acc.name);
+	        println!("   Address: {}", acc.mail);
+	        println!("   IMAP server: {}", acc.imap_server);
+	        println!("   IMAP user: {}", acc.imap_user);
 	    }	
 	}
 }

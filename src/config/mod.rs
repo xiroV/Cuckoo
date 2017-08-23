@@ -32,8 +32,8 @@ pub enum ConfigErrorType {
 }
 
 pub struct ConfigError {
-    err_type: ConfigErrorType,
-    field: Option<String>,
+    pub err_type: ConfigErrorType,
+    pub field: Option<String>,
 }
 
 pub trait ConfigErrorHandler {
