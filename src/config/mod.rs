@@ -10,10 +10,10 @@ mod configrs;
 
 pub struct Account {
     pub id: String,
-    pub name: Option<String>,
-    pub mail: Option<String>,
-    pub imap_server: Option<String>,
-    pub imap_user: Option<String>,
+    pub name: String,
+    pub mail: String,
+    pub imap_server: String,
+    pub imap_user: String,
 }
 
 pub struct Config {
@@ -21,7 +21,22 @@ pub struct Config {
 }
 
 pub trait ConfigReader {
-    fn new() -> Self;
-    fn read(&mut self) -> Option<&str>;
+    fn init() -> Self;
+    fn read(&mut self) -> Result<&Self, ConfigError>;
     fn get_account(self, search_id: &String) -> Option<Account>;
+}
+
+pub enum ConfigErrorType {
+    MissingField,
+    FileNotFound,
+}
+
+pub struct ConfigError {
+    err_type: ConfigErrorType,
+    field: Option<String>,
+}
+
+pub trait ConfigErrorHandler {
+    fn missing_field(field: &str) -> Self;
+    fn file_not_found() -> Self;
 }
