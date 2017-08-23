@@ -23,7 +23,7 @@ pub trait Controller {
 }
 
 pub trait IMAPController {
-    fn imap_connect(&mut self, &String, &String) -> Result<&Self, ControlMessage>;
+    fn imap_connect(&mut self, account: &String, password: &String) -> Result<&Self, ControlMessage>;
 }
 
 trait MessageHandler {
