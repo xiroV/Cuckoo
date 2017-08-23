@@ -13,7 +13,7 @@ impl IMAPController for Control {
                     ConfigErrorType::MissingField => {
                         return Err(
                             ControlMessage::new(
-                                MessageType::error,
+                                MessageType::Error,
                                 &format!("Missing account field '{:?}' in config file", e.field)
                             )
                         )
@@ -21,7 +21,7 @@ impl IMAPController for Control {
                     ConfigErrorType::FileNotFound => {
                         return Err(
                             ControlMessage::new(
-                                MessageType::error,
+                                MessageType::Error,
                                 "Config file not found"
                             )
                         )
@@ -33,7 +33,7 @@ impl IMAPController for Control {
         // FIXME This is a mess
         match conf.get_account(account) {
             Some(acc) => {
-                self.push_message(ControlMessage::new(MessageType::message, "Connecting.."));
+                self.push_message(ControlMessage::new(MessageType::Message, "Connecting.."));
 
                 match IMAP::connect(&acc.imap_server, &acc.imap_user, &password) {
                     Ok(conn) => {
@@ -43,13 +43,13 @@ impl IMAPController for Control {
                     Err(e) => match e.err_type {
                         IMAPErrorType::Connection => Err(
                             ControlMessage::new(
-                                MessageType::error,
+                                MessageType::Error,
                                 "Connection Failed"
                             )
                         ),
                         IMAPErrorType::Login => Err(
                             ControlMessage::new(
-                                MessageType::error,
+                                MessageType::Error,
                                 "Login failed"
                             )
                         ),
@@ -59,7 +59,7 @@ impl IMAPController for Control {
             None => {
                 return Err(
                     ControlMessage::new(
-                        MessageType::error,
+                        MessageType::Error,
                         "account not found in config"
                     )
                 );

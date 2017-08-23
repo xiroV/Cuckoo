@@ -3,8 +3,8 @@ mod simple_controller;
 use imap::{IMAP, Connection};
 
 enum MessageType {
-    message,
-    error, 
+    Message,
+    Error, 
 }
 
 struct ControlMessage {
