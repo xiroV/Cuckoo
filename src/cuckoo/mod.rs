@@ -1,4 +1,5 @@
 pub mod config;
+pub mod inbox;
 
 use self::config::Config;
 

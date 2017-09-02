@@ -4,11 +4,12 @@ use cuckoo::ServiceBundle;
 
 pub mod help_controller;
 pub mod config_controller;
+mod menu;
 
 #[derive(Debug)]
 pub struct Command {
-    // TODO This seems silly, there shouldn't be a need for three copies of the same string, but
-    // apparently it isn't trivial to have &str point to internal field
+    // TODO This seems silly, there shouldn't be a need for three copies of the same string.
+    // Apparently it isn't trivial to have &str point to internal field
     pub raw_command: String,
     pub ctype: String,
     pub argument_string: String,
@@ -95,13 +96,7 @@ impl<I: Read, O: Write> ReplUI<I, O> {
     }
 
     fn read_command(&mut self) -> Option<Command> {
-        let mut buffer = String::new();
-        let read = self.buffered_reader.read_line(&mut buffer).unwrap();
-        if read == 0 {
-            None
-        } else {
-            Some(Command::new(buffer))
-        }
+        self.read_line().map(|it| Command::new(it))
     }
 
     fn read_line(&mut self) -> Option<String> {
@@ -115,13 +110,17 @@ impl<I: Read, O: Write> ReplUI<I, O> {
         self.buffered_writer.flush().unwrap();
     }
 
+    #[allow(dead_code)]
     pub fn write(&mut self, message: &str) {
         self.buffered_writer.write(message.as_bytes()).unwrap();
+        self.buffered_writer.flush().unwrap();
     }
 
+    #[allow(dead_code)]
     pub fn writeln(&mut self, message: &str) {
-        self.write(message);
-        self.write("\n");
+        self.buffered_writer.write(message.as_bytes()).unwrap();
+        self.buffered_writer.write("\n".as_bytes()).unwrap();
+        self.buffered_writer.flush().unwrap();
     }
 }
 

@@ -20,8 +20,9 @@ impl ConfigController {
         ConfigController {}
     }
 
-    fn handle_config_command<I: Read, O: Write>(&self, ui: &mut ReplUI<I, O>, command: &mut Command,
-                                                configuration: &mut Config) {
+    fn handle_config_command<I: Read, O: Write>(
+        &self, ui: &mut ReplUI<I, O>, _command: &mut Command, configuration: &mut Config
+    ) {
         ui.writeln(&format!("You have {} accounts", configuration.accounts.len()));
     }
 }
