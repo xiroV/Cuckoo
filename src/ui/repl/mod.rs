@@ -4,13 +4,13 @@ use cuckoo::ServiceBundle;
 
 pub mod help_controller;
 pub mod config_controller;
+pub mod exit_controller;
+pub mod imap_controller;
+mod utils;
 mod menu;
 
 #[derive(Debug)]
 pub struct Command {
-    // TODO This seems silly, there shouldn't be a need for three copies of the same string.
-    // Apparently it isn't trivial to have &str point to internal field
-    pub raw_command: String,
     pub ctype: String,
     pub argument_string: String,
     pub is_consumed: bool
@@ -19,22 +19,9 @@ pub struct Command {
 impl Command {
     fn new(raw_command: String) -> Command {
         // Trim new lines and trailing whitespace
-        let trimmed = raw_command.trim_right().to_string();
-        let length = trimmed.len();
-        let split_at = trimmed.chars()
-            .enumerate()
-            .position(|(_, c)| c == ' ')
-            .unwrap_or(length);
-
-        let ctype = (&trimmed[0..split_at]).to_string();
-        let argument_string = if split_at == length {
-            "".to_string()
-        } else {
-            (&trimmed[(split_at + 1)..length]).to_string()
-        };
+        let (ctype, argument_string) = utils::split_at_space(&raw_command.trim());
 
         Command {
-            raw_command: trimmed,
             ctype: ctype,
             argument_string: argument_string,
             is_consumed: false
@@ -62,17 +49,24 @@ impl<I: Read, O: Write> Repl<I, O> {
     }
 
     pub fn main_loop(&mut self) {
-        loop {
+        self.ui.writeln("Welcome to the Cuckoo Mail Client Command Line Interpreter.");
+        self.ui.writeln("Type 'quit' to exit, 'help' to get a list of commands.");
+        while self.ui.should_run {
             self.ui.display_prompt();
             match self.ui.read_command() {
                 Some(mut command) => {
                     for handler in self.function_handlers.iter() {
                         handler.handle(&mut self.ui, &mut self.service_bundle, &mut command);
                     }
+
+                    if !command.is_consumed {
+                        self.ui.writeln("Command not recognized. Try 'help' or '?'.")
+                    }
                 }
                 None => break
             }
         }
+        self.ui.writeln("Bye.")
     }
 
     pub fn add_handler(&mut self, handler: Box<CommandHandler<I, O>>) {
@@ -82,6 +76,7 @@ impl<I: Read, O: Write> Repl<I, O> {
 
 pub struct ReplUI<I: Read, O: Write> {
     pub prompt: String,
+    pub should_run: bool,
     buffered_reader: BufReader<I>,
     buffered_writer: BufWriter<O>
 }
@@ -89,7 +84,8 @@ pub struct ReplUI<I: Read, O: Write> {
 impl<I: Read, O: Write> ReplUI<I, O> {
     fn new(ins: I, outs: O) -> Self {
         ReplUI {
-            prompt: "$ ".to_string(),
+            prompt: ">> ".to_string(),
+            should_run: true,
             buffered_reader: BufReader::new(ins),
             buffered_writer: BufWriter::new(outs)
         }

@@ -10,7 +10,13 @@ fn main() {
     // Initialize services.
     // Move this into its own thing when this gets too big
     let mut config = Config::new();
-    config.read().unwrap();
+    let config_result = config.read();
+    if config_result.is_err() {
+        println!("An error occurred during configuration parsing");
+        let error = config_result.err().unwrap();
+        println!("Reason: {}", error.human_readable_error);
+        return
+    }
 
     let service_bundle = cuckoo::ServiceBundle {
         config: config
@@ -34,6 +40,9 @@ fn main() {
 
         let config = ui::repl::config_controller::ConfigController::new();
         repl.add_handler(Box::new(config));
+
+        let exit_controller = ui::repl::exit_controller::ExitController {};
+        repl.add_handler(Box::new(exit_controller));
     }
 
     repl.main_loop();
