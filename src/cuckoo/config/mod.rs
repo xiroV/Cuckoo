@@ -68,6 +68,6 @@ impl ConfigError {
 pub trait ConfigReader {
     fn new() -> Self;
     fn read(&mut self) -> Result<(), ConfigError>;
-    fn get_account(self, search_id: &String) -> Option<Account>;
+    fn get_account(self, search_id: &str) -> Option<Account>;
 }
 

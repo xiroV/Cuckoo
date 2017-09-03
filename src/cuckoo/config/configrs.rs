@@ -77,6 +77,12 @@ impl ConfigReader for Config {
     }
 
     fn get_account(self, search_id: &str) -> Option<Account> {
-        self.accounts.iter().find(|acc| acc.id == search_id)
+        for acc in self.accounts {
+            if &acc.id == search_id {
+                return Some(acc);
+            }
+        }
+        return None;
     }
+
 }
