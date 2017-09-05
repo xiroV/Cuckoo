@@ -22,7 +22,7 @@ impl Command {
         let (ctype, argument_string) = utils::split_at_space(&raw_command.trim());
 
         Command {
-            ctype: ctype,
+            ctype: ctype.to_lowercase(),
             argument_string: argument_string,
             is_consumed: false
         }
@@ -98,7 +98,7 @@ impl<I: Read, O: Write> ReplUI<I, O> {
     fn read_line(&mut self) -> Option<String> {
         let mut buffer: String = String::new();
         let read: usize = self.buffered_reader.read_line(&mut buffer).unwrap_or(0);
-        if read == 0 { None } else { Some(buffer.to_lowercase()) }
+        if read == 0 { None } else { Some(buffer) }
     }
 
     fn display_prompt(&mut self) {
