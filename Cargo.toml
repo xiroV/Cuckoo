@@ -8,4 +8,6 @@ authors = [
 ]
 
 [dependencies]
-config = "0.4.1"
+config = "0.7.0"
+imap = "0.3.3"
+openssl = "0.9.17"

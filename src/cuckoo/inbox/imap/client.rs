@@ -1,23 +1,21 @@
 extern crate imap;
 extern crate openssl;
 
-use imap::{IMAP, IMAPClient, IMAPError};
-use imap::rust_imap::Connection;
-use self::openssl::ssl::{SslMethod, SslConnectorBuilder, SslStream};
-use std::io;
-use std::net::TcpStream;
+use super::{IMAP, IMAPClient, IMAPError, IMAPErrorType, IMAPErrorHandler};
+use super::Connection;
+use self::openssl::ssl::{SslMethod, SslConnectorBuilder};
 use self::imap::client::Client;
 
 impl IMAPClient for IMAP<Connection> {
-    fn connect(server:&String, username:&String, password:&String) -> Result<Self, IMAPError> {
+    fn connect(server: &str, username: &str, password: &str) -> Result<Self, IMAPError> {
         let port = 993;
-        let socket_addr = (server.as_str(), port);
+        let socket_addr = (server, port);
         let ssl_connector = SslConnectorBuilder::new(SslMethod::tls()).unwrap().build();
-        
+
         // Connect to mail server
         let mut imap_socket = match Client::secure_connect(socket_addr, server, ssl_connector) {
             Ok(s) => s,
-            Err(_) => return Err(IMAPError::Connection)   
+            Err(_) => return Err(IMAPError::new(IMAPErrorType::Connection))
         };
 
         // Login to mail server
@@ -26,10 +24,10 @@ impl IMAPClient for IMAP<Connection> {
                 let imap = Self {
                     connection: imap_socket,
                 };
-                return Ok(imap)
-            },
-            Err(_) => return Err(IMAPError::Login)
-        };
+                return Ok(imap);
+            }
+            Err(_) => return Err(IMAPError::new(IMAPErrorType::Login))
+        }
     }
 
     // FIXME Should not print from here, but return list of capabilities
@@ -71,7 +69,7 @@ impl IMAPClient for IMAP<Connection> {
     }*/
 
     fn disconnect(&mut self) {
-        self.connection.logout();
+        self.connection.logout().unwrap();
     }
 }
 
