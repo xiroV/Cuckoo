@@ -98,7 +98,7 @@ impl<I: Read, O: Write> ReplUI<I, O> {
     fn read_line(&mut self) -> Option<String> {
         let mut buffer: String = String::new();
         let read: usize = self.buffered_reader.read_line(&mut buffer).unwrap_or(0);
-        if read == 0 { None } else { Some(buffer) }
+        if read == 0 { None } else { Some(buffer.to_lowercase()) }
     }
 
     fn display_prompt(&mut self) {
