@@ -9,7 +9,7 @@ pub struct ExitController;
 impl<I: Read, O: Write> CommandHandler<I, O> for ExitController {
     fn handle(&self, ui: &mut ReplUI<I, O>, _bundle: &mut ServiceBundle,
               command: &mut Command) {
-        if command.ctype == "exit" {
+        if command.ctype == "quit" {
             let (sub_command, _) = utils::split_at_space(&command.argument_string);
 
             if sub_command == "-y" || sub_command == "--yes" {
@@ -18,7 +18,7 @@ impl<I: Read, O: Write> CommandHandler<I, O> for ExitController {
                 let option = menu::display_menu(
                     ui,
                     "Are you sure?",
-                    vec!["Yes - Exit application", "No - Keep application open"]
+                    vec!["Yes - Quit application", "No - Keep application open"]
                 ).unwrap_or(0);
 
                 ui.should_run = option == 1;
