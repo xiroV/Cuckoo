@@ -18,7 +18,7 @@ impl<I: Read, O: Write> CommandHandler<I, O> for ExitController {
                 let option = menu::display_menu(
                     ui,
                     "Are you sure?",
-                    vec!["Yes - Quit application", "No - Keep application open"]
+                    vec!["Quit application", "Keep application open"]
                 ).unwrap_or(0);
 
                 ui.should_run = option == 1;
