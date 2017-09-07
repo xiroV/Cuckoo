@@ -1,6 +1,8 @@
 use std::io::{Read, BufReader, BufWriter, BufRead, Write};
 use std::option::Option;
 use cuckoo::ServiceBundle;
+use std::clone::Clone;
+use std::mem;
 
 pub mod help_controller;
 pub mod config_controller;
@@ -29,6 +31,16 @@ impl Command {
     }
 }
 
+impl Clone for Command {
+    fn clone(&self) -> Self {
+        Command {
+            ctype: self.ctype.clone(),
+            argument_string: self.argument_string.clone(),
+            is_consumed: false
+        }
+    }
+}
+
 pub trait CommandHandler<I: Read, O: Write> {
     fn handle(&self, ui: &mut ReplUI<I, O>, services: &mut ServiceBundle, command: &mut Command);
 }
@@ -38,6 +50,8 @@ pub struct Repl<I: Read, O: Write> {
     function_handlers: Vec<Box<CommandHandler<I, O>>>,
     service_bundle: ServiceBundle
 }
+
+
 
 impl<I: Read, O: Write> Repl<I, O> {
     pub fn new(ins: I, outs: O, bundle: ServiceBundle) -> Self {
@@ -55,12 +69,31 @@ impl<I: Read, O: Write> Repl<I, O> {
             self.ui.display_prompt();
             match self.ui.read_command() {
                 Some(mut command) => {
-                    for handler in self.function_handlers.iter() {
-                        handler.handle(&mut self.ui, &mut self.service_bundle, &mut command);
-                    }
+
+                    {
+                        let mut cmd = &mut command; 
+
+                        match cmd.ctype.as_ref() {
+                            "!!" => {
+                                match self.ui.last_command {
+                                    Some(ref mut last_cmd) => {
+                                        mem::swap(cmd, last_cmd);
+                                    },
+                                    None => {},
+                                }
+                            },
+                            _ => {},
+                        }
+
+                        for handler in self.function_handlers.iter() {
+                            handler.handle(&mut self.ui, &mut self.service_bundle, cmd);
+                        }
+                    }      
 
                     if !command.is_consumed {
                         self.ui.writeln("Command not recognized. Try 'help' or '?'.")
+                    } else if command.ctype != "!!" {
+                        self.ui.last_command = Some(command.clone());
                     }
                 }
                 None => break
@@ -77,6 +110,7 @@ impl<I: Read, O: Write> Repl<I, O> {
 pub struct ReplUI<I: Read, O: Write> {
     pub prompt: String,
     pub should_run: bool,
+    pub last_command: Option<Command>,
     buffered_reader: BufReader<I>,
     buffered_writer: BufWriter<O>
 }
@@ -87,7 +121,8 @@ impl<I: Read, O: Write> ReplUI<I, O> {
             prompt: ">> ".to_string(),
             should_run: true,
             buffered_reader: BufReader::new(ins),
-            buffered_writer: BufWriter::new(outs)
+            buffered_writer: BufWriter::new(outs),
+            last_command: None
         }
     }
 
