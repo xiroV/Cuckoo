@@ -56,6 +56,11 @@ fn preproces_command<I: Read, O: Write>(ui: &mut ReplUI<I, O>, command: &mut Com
         "!!" => {
             match ui.last_command {
                 Some(ref mut last_cmd) => {
+                    if last_cmd.argument_string.trim().is_empty() {
+                        mem::swap(&mut last_cmd.argument_string, &mut command.argument_string);
+                    } else {
+                        last_cmd.argument_string = format!("{} {}", last_cmd.argument_string.trim(), command.argument_string);
+                    }
                     mem::swap(command, last_cmd);
                 },
                 None => {
@@ -85,19 +90,16 @@ impl<I: Read, O: Write> Repl<I, O> {
             match self.ui.read_command() {
                 Some(mut command) => {
 
-                    {
-                        let mut cmd = &mut command; 
+                    preproces_command(&mut self.ui, &mut command);
 
-                        preproces_command(&mut self.ui, cmd);
-
-                        for handler in self.function_handlers.iter() {
-                            handler.handle(&mut self.ui, &mut self.service_bundle, cmd);
-                        }
-                    }      
-
+                    for handler in self.function_handlers.iter() {
+                        handler.handle(&mut self.ui, &mut self.service_bundle, &mut command);
+                    }
+                    
                     if !command.is_consumed {
                         self.ui.writeln("Command not recognized. Try 'help' or '?'.")
-                    } else if command.ctype != "!!" {
+                    } 
+                    if command.ctype != "!!" {
                         self.ui.last_command = Some(command.clone());
                     }
                 }
