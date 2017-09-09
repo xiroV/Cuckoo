@@ -51,7 +51,22 @@ pub struct Repl<I: Read, O: Write> {
     service_bundle: ServiceBundle
 }
 
-
+fn preproces_command<I: Read, O: Write>(ui: &mut ReplUI<I, O>, command: &mut Command) {
+    match command.ctype.as_ref() {
+        "!!" => {
+            match ui.last_command {
+                Some(ref mut last_cmd) => {
+                    mem::swap(command, last_cmd);
+                },
+                None => {
+                    command.is_consumed = true;
+                    ui.writeln("No previous command found.");
+                },
+            }
+        },
+        _ => {},
+    }
+}
 
 impl<I: Read, O: Write> Repl<I, O> {
     pub fn new(ins: I, outs: O, bundle: ServiceBundle) -> Self {
@@ -73,17 +88,7 @@ impl<I: Read, O: Write> Repl<I, O> {
                     {
                         let mut cmd = &mut command; 
 
-                        match cmd.ctype.as_ref() {
-                            "!!" => {
-                                match self.ui.last_command {
-                                    Some(ref mut last_cmd) => {
-                                        mem::swap(cmd, last_cmd);
-                                    },
-                                    None => {},
-                                }
-                            },
-                            _ => {},
-                        }
+                        preproces_command(&mut self.ui, cmd);
 
                         for handler in self.function_handlers.iter() {
                             handler.handle(&mut self.ui, &mut self.service_bundle, cmd);
