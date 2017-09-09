@@ -38,7 +38,7 @@ fn main() {
         let help = ui::repl::help_controller::HelpController {};
         repl.add_handler(Box::new(help));
 
-        let config = ui::repl::config_controller::ConfigController::new();
+        let config = ui::repl::config_controller::ConfigController {};
         repl.add_handler(Box::new(config));
 
         let exit_controller = ui::repl::exit_controller::ExitController {};

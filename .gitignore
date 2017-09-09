@@ -24,3 +24,6 @@ tags
 
 # IntelliJ IDEA files
 .idea/
+
+# VS code files
+.vscode/

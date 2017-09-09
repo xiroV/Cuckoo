@@ -17,9 +17,6 @@ impl<I: Read, O: Write> CommandHandler<I, O> for ConfigController {
 }
 
 impl ConfigController {
-    pub fn new() -> Self {
-        ConfigController {}
-    }
 
     fn handle_config_command<I: Read, O: Write>(
         &self,
@@ -33,7 +30,8 @@ impl ConfigController {
         match sub_command {
             "read" => self.handle_read_config(ui, &configuration, &arguments),
             "edit" => ui.writeln("config edit - Not yet implemented"),
-            _ => ui.writeln(&format!("Unknown sub-command '{}'", sub_command)),
+            "" => ui.writeln("Please supply a sub-command. Valid sub-commands are {read | edit}"),
+            _ => ui.writeln(&format!("Unknown sub-command '{}' for config", sub_command)),
         };
 
         command.is_consumed = true
