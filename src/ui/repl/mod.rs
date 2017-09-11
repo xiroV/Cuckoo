@@ -112,6 +112,14 @@ impl<I: Read, O: Write> Repl<I, O> {
     pub fn add_handler(&mut self, handler: Box<CommandHandler<I, O>>) {
         self.function_handlers.push(handler);
     }
+
+    pub fn get_handlers(&mut self) -> &Vec<Box<CommandHandler<I, O>>> {
+        &self.function_handlers
+    }
+
+    pub fn get_service_bundle(&mut self) -> &ServiceBundle {
+        &self.service_bundle
+    }
 }
 
 pub struct ReplUI<I: Read, O: Write> {

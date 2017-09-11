@@ -1,5 +1,6 @@
 mod ui;
 mod cuckoo;
+mod spec;
 
 use ui::repl::Repl;
 use cuckoo::config::{ConfigReader, Config};
