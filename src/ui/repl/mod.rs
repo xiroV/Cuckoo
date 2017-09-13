@@ -151,7 +151,7 @@ impl<I: Read, O: Write> ReplUI<I, O> {
         if read == 0 { None } else { Some(buffer) }
     }
 
-    fn display_prompt(&mut self) {
+    pub fn display_prompt(&mut self) {
         self.buffered_writer.write(&self.prompt.as_bytes()).unwrap();
         self.buffered_writer.flush().unwrap();
     }
@@ -167,6 +167,14 @@ impl<I: Read, O: Write> ReplUI<I, O> {
         self.buffered_writer.write(message.as_bytes()).unwrap();
         self.buffered_writer.write("\n".as_bytes()).unwrap();
         self.buffered_writer.flush().unwrap();
+    }
+
+    pub fn get_bufwriter(&mut self) -> &BufWriter<O> {
+        &self.buffered_writer
+    }
+
+    pub fn get_bufread(&mut self) -> &BufReader<I> {
+        &self.buffered_reader
     }
 }
 
