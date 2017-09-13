@@ -19,7 +19,7 @@ pub struct Command {
 }
 
 impl Command {
-    fn new(raw_command: String) -> Command {
+    pub fn new(raw_command: String) -> Command {
         // Trim new lines and trailing whitespace
         let (ctype, argument_string) = utils::split_at_space(&raw_command.trim());
 
@@ -131,7 +131,7 @@ pub struct ReplUI<I: Read, O: Write> {
 }
 
 impl<I: Read, O: Write> ReplUI<I, O> {
-    fn new(ins: I, outs: O) -> Self {
+    pub fn new(ins: I, outs: O) -> Self {
         ReplUI {
             prompt: ">> ".to_string(),
             should_run: true,
@@ -141,11 +141,11 @@ impl<I: Read, O: Write> ReplUI<I, O> {
         }
     }
 
-    fn read_command(&mut self) -> Option<Command> {
+    pub fn read_command(&mut self) -> Option<Command> {
         self.read_line().map(|it| Command::new(it))
     }
 
-    fn read_line(&mut self) -> Option<String> {
+    pub fn read_line(&mut self) -> Option<String> {
         let mut buffer: String = String::new();
         let read: usize = self.buffered_reader.read_line(&mut buffer).unwrap_or(0);
         if read == 0 { None } else { Some(buffer) }
